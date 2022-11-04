@@ -18,6 +18,36 @@ class ArticleController extends AdminController
      */
     protected $title = 'Article';
 
+    public function index()
+    {
+        return Article::content(function (Content $content) {
+
+            // optional
+            $content->header('page header');
+
+            // optional
+            $content->description('page description');
+
+            // add breadcrumb since v1.5.7
+            $content->breadcrumb(
+                ['text' => 'Dashboard', 'url' => '/admin'],
+                ['text' => 'User management', 'url' => '/admin/users'],
+                ['text' => 'Edit user']
+            );
+
+            // Fill the page body part, you can put any renderable objects here
+            $content->body('hello world');
+
+            // Add another contents into body
+            $content->body('foo bar');
+
+            // method `row` is alias for `body`
+            $content->row('hello world');
+
+            // Direct rendering view, Since v1.6.12
+            $content->view('dashboard', ['data' => 'foo']);
+        });
+    }
     /**
      * Make a grid builder.
      *
@@ -27,7 +57,16 @@ class ArticleController extends AdminController
     {
         $grid = new Grid(new Article);
 
-        $grid->column('title', __('タイトル'));
+        $grid->column('title')->display(function ($title, $column) {
+
+            if ($title !== 'error') {
+                return $title;
+            }
+
+            // var_dump($title);
+
+            // return $column->setAttributes(['style' => 'background-color:red;']);
+        });
         $grid->column('article.title', __('カテゴリー'));
         $grid->column('sub_title', __('サブタイトル'));
         $grid->column('description', __('説明'));
@@ -38,6 +77,8 @@ class ArticleController extends AdminController
             $filter->disableIdFilter();
             $filter->like('title', __('タイトル'));
             $filter->like('article.title', __('カテゴリー'));
+            $filter->between('created_at', __('作成日'))->datetime();
+            // $filter->between("DATE", '日時')->default(["start" => date("Y/m/d"), "end" => date("Y/m/d 23:59:99")]);
         });
         return $grid;
     }

@@ -1,0 +1,4 @@
+[2022-11-04 08:52:14.495] [sharedprocess] [info] Starting worker process with pid 20052 (type: fileWatcher, window: 1).
+[2022-11-04 08:52:37.730] [sharedprocess] [info] Worker process with pid 20052 terminated normally (type: fileWatcher, window: 1).
+[2022-11-04 08:52:39.253] [sharedprocess] [info] Starting worker process with pid 20112 (type: fileWatcher, window: 1).
+[2022-11-04 09:07:06.888] [sharedprocess] [warning] No ptyHost heartbeat after 6 seconds
