@@ -1,8 +1,8 @@
 <?php
 
 return [
-    "Save order"            => "hozon",
-    "save order"            => "hozon",
+    'Save order'            => "hozon",
+    'Saveorder'            => "hozon",
     'online'                => 'オンライン',
     'login'                 => 'ログイン',
     'logout'                => 'ログアウト',

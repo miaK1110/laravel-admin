@@ -21,4 +21,4 @@
 Encore\Admin\Form::forget(['map', 'editor']);
 
 
-app('view')->prependNamespace('admin',resource_path('views/laravel-admin'));
+// app('view')->prependNamespace('admin', resource_path('views/laravel-admin'));

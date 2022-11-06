@@ -12,6 +12,7 @@ use App\Admin\Grid\Displayers\CustomActions;
 use Encore\Admin\Show;
 use App\Admin\Controllers\Request;
 use App\Admin\Actions\User\Delete;
+use Image;
 
 class PicController extends AdminController
 {
@@ -34,9 +35,9 @@ class PicController extends AdminController
         $grid->sortable();
 
         // $grid->order_column()->orderable();
-        
+
         // delete checkbox from grid
-        // $grid->option('show_row_selector' , false);
+        $grid->option('show_row_selector', false);
 
         // $grid->fixColumns(4, -3);
 
@@ -47,10 +48,10 @@ class PicController extends AdminController
         $grid->column('user', __('ユーザー名/ユーザーID'))->display(function () {
 
             return   '<div class="row">'
-            . $this->name . '&emsp;' . $this->kana .
-            '</div><div class="row">'
-            . $this->login_id .
-            '</div>';
+                . $this->name . '&emsp;' . $this->kana .
+                '</div><div class="row">'
+                . $this->login_id .
+                '</div>';
         });
         $grid->column('email', __('メールアドレス'));
 
@@ -63,10 +64,11 @@ class PicController extends AdminController
             $actions->disableView(); // 詳細表示無効
 
             $id = $actions->getKey();
-            $actions->prepend('before');
+            // append/prependを使うとアクションボタンにテキストなどをいれることもできる
+            // $actions->prepend('before');
             $actions->prepend('<a href="/admin/pics/' . $id . '/edit"><button type="button" class="btn btn-primary btn-xs">編集</button></a></br>');
             $actions->append('<a href="/admin/pics/' . $id . '/delete"><button type="button" class="btn btn-danger btn-xs">削除</button></a></br>');
-            
+
             // they dont work atm bc I used Actions instead of DropDownActions
             // $actions->add(new Delete($id));
             // $actions->append(new Delete($id));
@@ -125,48 +127,48 @@ class PicController extends AdminController
         Form::init(function (Form $form) {
 
             $form->disableEditingCheck();
-
             $form->disableCreatingCheck();
-
             $form->disableViewCheck();
 
 
-        $form->tools(function (Form\Tools $tools) {
+            $form->tools(function (Form\Tools $tools) {
 
-            // Disable `List` btn.
-            $tools->disableList();
-        
-            // Disable `Delete` btn.
-            $tools->disableDelete();
-        
-            // Disable `Veiw` btn.
-            $tools->disableView();
-        
-            // modoru button
-            $tools->add('<a href="http://localhost:8000/admin/pics" class="btn btn-default">Back</a>');
+                // Disable `List` btn.
+                $tools->disableList();
+
+                // Disable `Delete` btn.
+                $tools->disableDelete();
+
+                // Disable `Veiw` btn.
+                $tools->disableView();
+
+                // 戻る button
+                $tools->add('<a href="http://localhost:8000/admin/pics" class="btn btn-default">Back</a>');
+            });
         });
 
-        });
+        $form->isEditing() ? $form->html('<h3>登録情報編集</h3>') : $form->html('<h3>新規登録</h3>');
 
         $form->text('name', __('苗字'))->required();
         $form->text('kana', __('かな'))->required();
         $form->text('email', __('メールアドレス'));
-        $form->image('pic', __('ユーザー画像'));
+        $form->image('pic', __('ユーザー画像'))->thumbnail('small', $width = 300, $height = 300);
         $form->text('pair_id', __('ペアID'));
         $form->text('slack_id', __('Slack ID'));
         $form->text('line_url', __('LINE URL'));
 
+        $form->html('<h3>ログイン情報</h3>');
         $form->divider();
 
         if ($form->isEditing()) {
-            $form->text('login_id', __('ログインID'))->help('変更できません')->disable();
-            $form->password('password', __('パスワード'))->rules('confirmed')->help('変更する場合のみ入力');
+            $form->text('login_id', __('ログインID'))->help('変更できません')->readOnly();
+            $form->password('password', __('パスワード'))->help('変更する場合のみ入力');
         } else {
             $form->text('login_id', __('ログインID'));
             $form->password('password', __('パスワード'))->rules('confirmed');
         }
 
-        $form->password('password_confirmation', __(''))->help('上記と同じものを入力');
+        // $form->password('password_confirmation', __(''))->help('上記と同じものを入力');
 
         return $form;
     }

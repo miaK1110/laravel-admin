@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Layout\Content;
 
 class ArticleController extends AdminController
 {
@@ -18,36 +19,39 @@ class ArticleController extends AdminController
      */
     protected $title = 'Article';
 
-    public function index()
-    {
-        return Article::content(function (Content $content) {
+    // public function index(Content $content)
+    // {
+    // $tree = new Tree(new ProductCategory);
+    // ここでviewを返すことはできる、、、
+    // return $this->form();
+    // $id = 1;
+    // return $this->detail($id);
+    // return $this->grid();
+    // return  $content->view('dashboard', ['data' => 'foo']);
+    // $content->view('dashboard', ['data' => 'foo']);
+    // }
+    // public function update(Content $content)
+    // {
 
-            // optional
-            $content->header('page header');
 
-            // optional
-            $content->description('page description');
+    //     return $this->form()->update(1);
+    // }
 
-            // add breadcrumb since v1.5.7
-            $content->breadcrumb(
-                ['text' => 'Dashboard', 'url' => '/admin'],
-                ['text' => 'User management', 'url' => '/admin/users'],
-                ['text' => 'Edit user']
-            );
+    // /**
+    //  * Edit interface.
+    //  *
+    //  * @param mixed $id
+    //  * @param Content $content
+    //  * @return Content
+    //  */
+    // public function edit($id, Content $content)
+    // {
+    //     return $content
+    //         ->header('Edit')
+    //         ->description('description')
+    //         ->body($this->form());
+    // }
 
-            // Fill the page body part, you can put any renderable objects here
-            $content->body('hello world');
-
-            // Add another contents into body
-            $content->body('foo bar');
-
-            // method `row` is alias for `body`
-            $content->row('hello world');
-
-            // Direct rendering view, Since v1.6.12
-            $content->view('dashboard', ['data' => 'foo']);
-        });
-    }
     /**
      * Make a grid builder.
      *
@@ -57,29 +61,55 @@ class ArticleController extends AdminController
     {
         $grid = new Grid(new Article);
 
-        $grid->column('title')->display(function ($title, $column) {
+        // $grid->tools(function ($tools) {
+        //     $tools->append("<a href='your-create-URI' class='btn btn-default'>Create</a>");
+        // });
 
-            if ($title !== 'error') {
-                return $title;
-            }
+        // $grid->column('title')->display(function ($title, $column) {
 
-            // var_dump($title);
+        //     if ($title !== 'error') {
+        //         return $title;
+        //     }
 
-            // return $column->setAttributes(['style' => 'background-color:red;']);
-        });
-        $grid->column('article.title', __('カテゴリー'));
-        $grid->column('sub_title', __('サブタイトル'));
-        $grid->column('description', __('説明'));
-        $grid->column('released', __('公開設定'))->bool();
+        // var_dump($title);
+
+        // return $column->setAttributes(['style' => 'background-color:red;']);
+        // });
+        $grid->column('article.title', __('カテゴリー'))->editable();
+        $grid->column('sub_title', __('サブタイトル'))->editable();
+        $grid->column('description', __('説明'))->editable();
+        $grid->column('released', __('公開設定'))->bool()->editable();
         $grid->column('thumbnail', __('サムネイル'))->image('', '60', '60');
 
-        $grid->filter(function ($filter) {
-            $filter->disableIdFilter();
-            $filter->like('title', __('タイトル'));
-            $filter->like('article.title', __('カテゴリー'));
-            $filter->between('created_at', __('作成日'))->datetime();
-            // $filter->between("DATE", '日時')->default(["start" => date("Y/m/d"), "end" => date("Y/m/d 23:59:99")]);
-        });
+        // $grid->filter(function ($filter) {
+        //     $filter->disableIdFilter();
+        //     $filter->like('title', __('タイトル'));
+        //     $filter->like('article.title', __('カテゴリー'));
+        //     $filter->between('created_at', __('作成日'))->datetime();
+        //     // $filter->between("DATE", '日時')->default(["start" => date("Y/m/d"), "end" => date("Y/m/d 23:59:99")]);
+        // });
+        // $form = new Form(new Article());
+
+        // $form->select('type_id', __('カテゴリー'))->options((new ArticleType())::selectOptions());
+        // $form->text('title', __('タイトル'))->required();
+        // $form->text('sub_title', __('サブタイトル'));
+        // $form->textarea('description', __('説明'))->required();
+        // image()を使用するにはディスクスペースが必要なのでconfig/filesystems.phpのdisksのpublicの下に以下を記載
+        // 'admin' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('uploads'),
+        //     'url' => env('APP_URL') . 'uploads/',
+        //     'visibility' => 'public',
+        // ],
+        // その後public配下にuploadsディレクトリを配置
+        // $form->image('thumbnail', __('サムネイル'));
+        // $states = [
+        //     'on' => ['value' => 1, 'text' => '公開'],
+        //     'off' => ['value' => 0, 'text' => '非公開']
+        // ];
+        // $form->switch('released', __('公開設定'))->states($states);
+
+        // return $form;
         return $grid;
     }
 
@@ -96,7 +126,14 @@ class ArticleController extends AdminController
         $show->field('id', __('ID'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+        $show->panel()
+            ->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
 
+                $tools->append("<a href='/articles/1/edit' class='btn btn-default'>編集</a>");
+            });;
         return $show;
     }
 
@@ -127,6 +164,36 @@ class ArticleController extends AdminController
             'off' => ['value' => 0, 'text' => '非公開']
         ];
         $form->switch('released', __('公開設定'))->states($states);
+        $form->tools(function (Form\Tools $tools) {
+
+            // Disable `List` btn.
+            $tools->disableList();
+
+            // Disable `Delete` btn.
+            $tools->disableDelete();
+
+            // Disable `Veiw` btn.
+            $tools->disableView();
+
+            $tools->add('<button >aaaaa</button>');
+        });
+        $form->footer(function ($footer) {
+
+            // disable reset btn
+            $footer->disableReset();
+
+            // disable submit btn
+            // $footer->disableSubmit();
+
+            // disable `View` checkbox
+            $footer->disableViewCheck();
+
+            // disable `Continue editing` checkbox
+            $footer->disableEditingCheck();
+
+            // disable `Continue Creating` checkbox
+            $footer->disableCreatingCheck();
+        });
 
         return $form;
     }
