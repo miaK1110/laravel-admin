@@ -6,6 +6,8 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Admin;
+use App\Models\Article;
 
 class ExampleController extends AdminController
 {
@@ -23,7 +25,9 @@ class ExampleController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new ExampleModel);
+        $grid = new Grid(new Article);
+
+        Admin::style('.control-label {font-size: 12px;}');
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('created_at', __('Created at'));
@@ -40,7 +44,7 @@ class ExampleController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(ExampleModel::findOrFail($id));
+        $show = new Show(Article::findOrFail($id));
 
         $show->field('id', __('ID'));
         $show->field('created_at', __('Created at'));
@@ -56,7 +60,7 @@ class ExampleController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new ExampleModel);
+        $form = new Form(new Article);
 
         $form->display('id', __('ID'));
         $form->display('created_at', __('Created At'));

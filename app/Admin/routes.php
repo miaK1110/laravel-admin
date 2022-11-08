@@ -16,4 +16,5 @@ Route::group([
     $router->resource('articles/', ArticleController::class);
     $router->resource('article-types', ArticleTypeController::class);
     $router->resource('pics', PicController::class);
+    $router->resource('fontsize', ExampleController::class);
 });

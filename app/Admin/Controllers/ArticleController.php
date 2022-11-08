@@ -19,17 +19,15 @@ class ArticleController extends AdminController
      */
     protected $title = 'Article';
 
-    // public function index(Content $content)
-    // {
-    // $tree = new Tree(new ProductCategory);
-    // ここでviewを返すことはできる、、、
-    // return $this->form();
-    // $id = 1;
-    // return $this->detail($id);
-    // return $this->grid();
-    // return  $content->view('dashboard', ['data' => 'foo']);
-    // $content->view('dashboard', ['data' => 'foo']);
-    // }
+    public function index(Content $content)
+    {
+        $id = 1;
+        // return $this->detail($id);
+        // return $this->edit($id, $content);
+        // return  $content->view('dashboard', ['data' => 'foo']);
+        return $content->view('admin/calender.calender');
+        // return view('laravel-admin/test-page','admin::content' => $content]);
+    }
     // public function update(Content $content)
     // {
 
@@ -46,14 +44,15 @@ class ArticleController extends AdminController
     //  */
     // public function edit($id, Content $content)
     // {
+
     //     return $content
     //         ->header('Edit')
     //         ->description('description')
-    //         ->body($this->form());
+    //         ->body($this->form()->edit($id));
     // }
 
     /**
-     * Make a grid builder.
+     * Make a grid builder.s
      *
      * @return Grid
      */
@@ -128,7 +127,7 @@ class ArticleController extends AdminController
         $show->field('updated_at', __('Updated at'));
         $show->panel()
             ->tools(function ($tools) {
-                $tools->disableEdit();
+                // $tools->disableEdit();
                 $tools->disableList();
                 $tools->disableDelete();
 
@@ -175,7 +174,7 @@ class ArticleController extends AdminController
             // Disable `Veiw` btn.
             $tools->disableView();
 
-            $tools->add('<button >aaaaa</button>');
+            $tools->add('<button href="http://localhost:8000/admin/articles/1/edit">aaaa11a</button>');
         });
         $form->footer(function ($footer) {
 
@@ -194,6 +193,12 @@ class ArticleController extends AdminController
             // disable `Continue Creating` checkbox
             $footer->disableCreatingCheck();
         });
+
+        // $form->saving(function (Form $form) {
+
+        //     // redirect url
+        //     return redirect('/admin/users');
+        // });
 
         return $form;
     }
