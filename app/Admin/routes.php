@@ -17,4 +17,11 @@ Route::group([
     $router->resource('article-types', ArticleTypeController::class);
     $router->resource('pics', PicController::class);
     $router->resource('fontsize', ExampleController::class);
+    $router->resource('modal', ModalController::class);
+    // modal/customersみたいなの× いちいちルート名変えないと/admin/customers/adminみたいになる
+    $router->get('customers', 'ModalController@modal');
+    $router->get('search/{id}', 'ModalController@getCustomer');
 });
+// Route::get('modal/customers', 'App\Admin\Controllers\ModalController@modal');
+// Route::get('modal/customers', [ModalController::class, 'modal']);
+// Route::get('modal/customers', 'ModalController@modal');

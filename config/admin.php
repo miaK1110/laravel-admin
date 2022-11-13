@@ -382,9 +382,9 @@ return [
     | The global Grid action display class.
     |--------------------------------------------------------------------------
     */
-    // 'grid_action_class' => \Encore\Admin\Grid\Displayers\DropdownActions::class,
+    // Idk if it's okay to have 2 classes mixed in here.. it's working tho
     'grid_action_class' => \Encore\Admin\Grid\Displayers\Actions::class,
-
+    // 'grid_action_class' => \Encore\Admin\Grid\Displayers\DropdownActions::class,
     /*
     |--------------------------------------------------------------------------
     | Extension Directory
