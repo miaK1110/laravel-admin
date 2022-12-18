@@ -18,6 +18,8 @@ Route::group([
     $router->resource('pics', PicController::class);
     $router->resource('fontsize', ExampleController::class);
     $router->resource('modal', ModalController::class);
+    $router->resource('category', CategoryController::class);
+    $router->resource('category/{id}/subcategory', SubCategoryController::class);
     // modal/customersみたいなの× いちいちルート名変えないと/admin/customers/adminみたいになる
     $router->get('customers', 'ModalController@modal');
     $router->get('search/{id}', 'ModalController@getCustomer');
